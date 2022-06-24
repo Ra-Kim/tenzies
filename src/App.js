@@ -31,7 +31,7 @@ export default function App() {
                 localStorage.setItem("lowestCount", count)
             }
         }
-    }, [dice, count, lowestCount])
+    }, [dice, count, time,  lowestCount])
 
 
 

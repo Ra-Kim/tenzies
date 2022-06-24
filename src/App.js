@@ -12,8 +12,9 @@ export default function App() {
     const [permit, setPermit] = useState(true)
     const [time, setTime] = useState({secs: 0 , min: 0, ms: 0})
     const [tenzies, setTenzies] = useState(false)
-    const [currentTime, setCurrentTime] = useState()
     let lowestCount = localStorage.getItem("lowestCount")
+    let updatedSecs = time.secs , updatedMin = time.min, updatedMs = time.ms
+
 
 
     
@@ -22,31 +23,31 @@ export default function App() {
         const firstValue = dice[0].value
         const allSameValue = dice.every(die => die.value === firstValue)
         if (allHeld && allSameValue) {
-            setCurrentTime(time)
             setTenzies(true)
-
-            
+            clearInterval(interv)
 
             if(count <= lowestCount) {
                 localStorage.setItem("lowestCount", count)
             }
         }
-    }, [dice, count, time,  lowestCount])
+    }, [dice, count, interv, lowestCount])
 
 
 
-    let updatedSecs = time.secs , updatedMin = time.min, updatedMs = time.ms
 
     const run = () => {
-        if(updatedSecs === 60){
-            updatedMin++
-            updatedSecs = 0
-        }
-        if(updatedMs === 100){
-            updatedSecs++
-            updatedMs=0
-        }
-        updatedMs++
+        
+            if(updatedSecs === 60){
+                updatedMin++
+                updatedSecs = 0
+            }
+            if(updatedMs === 100){
+                updatedSecs++
+                updatedMs=0
+            }
+            updatedMs++
+        
+        
         return setTime({secs: updatedSecs , min: updatedMin, ms: updatedMs})
     }
 
@@ -89,8 +90,8 @@ export default function App() {
             }))
         } else {
             setRecordTime((prevRecord) => {
-                return prevRecord.lowestSecs > currentTime.secs ?
-                        {...prevRecord, lowestSecs: currentTime.secs} :
+                return prevRecord.lowestSecs > time.secs ?
+                        {...prevRecord, lowestSecs: time.secs} :
                         prevRecord
             })
             clearState()
@@ -99,7 +100,6 @@ export default function App() {
     }
 
     function clearState(){
-        clearInterval(interv)
             if(status){
                 localStorage.setItem("lowestCount", count)
                 setStaus(!status)
@@ -141,19 +141,12 @@ export default function App() {
             Click each die to freeze it at its current value between rolls.</p>
             <div className="stats-div">
                 <p>Number of rolls: <span>{count}</span></p>
-                <p>Timer: {tenzies ? 
-                    <span>
-                        {currentTime.min >= 10 ?
-                        currentTime.min : "0" + currentTime.min}: 
-                        {currentTime.secs >= 10 ? currentTime.secs : "0" + currentTime.secs}
-                    </span>
-                    :
+                <p>Timer:
                     <span>
                         {time.min >= 10 ?
-                        time.min : "0" + time.min}: 
-                        {time.secs >= 10 ? time.secs : "0" + time.secs}
-                    </span>
-                }
+                        time.min : " 0" + time.min}: 
+                        {time.secs >= 10 ? time.secs : " 0" + time.secs}
+                    </span> 
                 </p>
             </div>
             <div className="stats-div">
